@@ -1,0 +1,73 @@
+/* Obstacle Avoiding Robot Using Ultrasonic Sensor and Arduino Uno
+ */
+
+int trigPin = 9;                    // Trig pin of HC-SR04
+int echoPin = 10;                   // Echo pin of HC-SR04
+
+int revLeft4 = 4;                   // Reverse motion of Left motor
+int fwdLeft5 = 5;                   // Forward motion of Left motor
+int revRight6 = 6;                  // Reverse motion of Right motor
+int fwdRight7 = 7;                  // Forward motion of Right motor
+
+long duration, distance;            // Here pulseTime is named as duration
+
+void setup() {
+  
+  delay(random(500,2000));          // Delay for random time
+  Serial.begin(9600);
+
+  pinMode(revLeft4, OUTPUT);        // Set Motor pins as output
+  pinMode(fwdLeft5, OUTPUT);
+  pinMode(revRight6, OUTPUT);
+  pinMode(fwdRight7, OUTPUT);
+ 
+  pinMode(trigPin, OUTPUT);         // Set trig pin as output
+  pinMode(echoPin, INPUT);          // Set echo pin as input to capture reflected waves
+}
+
+void loop() {
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);   
+  digitalWrite(trigPin, HIGH);       // Send waves for 10 us
+  delayMicroseconds(10);
+  duration = pulseIn(echoPin, HIGH); // Receive reflected waves
+  distance = duration / 58.2;        // Convert to distance
+  delay(10);  
+                                     // If you dont get proper movements of your robot then alter the pin numbers
+  if (distance > 19)            
+  {
+    digitalWrite(fwdRight7, HIGH);   // Forward Movement
+    digitalWrite(revRight6, LOW);
+    digitalWrite(fwdLeft5, HIGH);                                
+    digitalWrite(revLeft4, LOW);                                                       
+  }
+
+  if (distance < 18)
+  {
+    digitalWrite(fwdRight7, LOW);    // Stop                
+    digitalWrite(revRight6, LOW);
+    digitalWrite(fwdLeft5, LOW);                                
+    digitalWrite(revLeft4, LOW);
+    delay(500);
+
+    digitalWrite(fwdRight7, LOW);    // Backward Movement       
+    digitalWrite(revRight6, HIGH);
+    digitalWrite(fwdLeft5, LOW);                                
+    digitalWrite(revLeft4, HIGH);
+    delay(500);
+
+    digitalWrite(fwdRight7, LOW);    // Stop                
+    digitalWrite(revRight6, LOW);
+    digitalWrite(fwdLeft5, LOW);                                
+    digitalWrite(revLeft4, LOW);  
+    delay(100);  
+
+    digitalWrite(fwdRight7, HIGH);   // Leftward Movement
+    digitalWrite(revRight6, LOW);   
+    digitalWrite(revLeft4, LOW);                                 
+    digitalWrite(fwdLeft5, LOW);  
+    delay(500);
+  }
+
+}
